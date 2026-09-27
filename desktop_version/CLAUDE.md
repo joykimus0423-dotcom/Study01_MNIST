@@ -10,6 +10,7 @@
 python -m pip install -r requirements.txt   # 패키지 설치
 python train.py                              # 학습 → mnist_cnn.pt 저장 (MNIST는 ./data에 자동으로 내려받음)
 python draw_app.py                           # 그림판 GUI 실행 (mnist_cnn.pt가 있어야 함)
+python export_web.py                         # mnist_cnn.pt → ../web_version/model/ (웹 버전 가중치 + 검사 데이터)
 ```
 
 - 학습은 CPU에서 에폭당 약 2.5분, 5에폭에 약 13분이 걸립니다. 도구 제한 시간(10분)을 넘기므로 백그라운드로 실행하세요. 테스트 정확도는 약 99.4%입니다.
@@ -23,3 +24,4 @@ python draw_app.py                           # 그림판 GUI 실행 (mnist_cnn.p
 - `draw_app.py`는 화면용 tk 캔버스와, 메모리 속 PIL 이미지(검은 바탕에 흰 글씨 = MNIST 형식)에 같은 획을 동시에 그립니다. 인식에는 PIL 이미지만 씁니다.
 - `전처리()`는 MNIST 원본을 만든 방식을 그대로 따릅니다. 글씨가 있는 영역만 잘라 긴 변을 20px로 줄이고 28×28 가운데에 놓은 뒤, 무게중심이 (14, 14)에 오도록 옮깁니다. 이 단계를 빼거나 바꾸면 실제 손글씨 인식률이 크게 떨어집니다.
 - `train.py`는 `RandomAffine`(회전·이동·확대)로 데이터를 늘려서 삐뚤빼뚤한 손글씨에도 잘 맞도록 학습합니다. 테스트 정확도가 가장 높았던 에폭의 가중치만 저장합니다.
+- `export_web.py`는 배치정규화를 합성곱에 합쳐 `../web_version/model/`에 `model.json`, `weights.bin`, `test_cases.json`을 씁니다. 합친 결과가 원래 모델과 다르면(확률 오차 1e-4 초과) 저장하지 않고 멈춥니다. `draw_app.py`의 `전처리()`와 상수를 그대로 불러다 쓰므로, 모델을 다시 학습하거나 `전처리()`를 바꿨다면 반드시 다시 실행하세요. 웹 버전이 모르는 층을 모델에 넣으면 `층_목록_만들기()`가 오류를 냅니다.
