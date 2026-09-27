@@ -1,0 +1,6 @@
+# MNIST 데이터셋 (train.py 실행 시 자동으로 내려받음)
+data/
+
+# 파이썬 캐시
+__pycache__/
+*.pyc
