@@ -1,0 +1,59 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  background: #f4f5f7;
+  color: #222;
+}
+
+main { max-width: 640px; margin: 0 auto; padding: 16px; }
+
+h1 { font-size: 1.3rem; margin: 0 0 8px; }
+h1 small { display: block; font-size: 0.8rem; font-weight: normal; color: #666; }
+
+#상태 { margin: 0 0 12px; color: #555; }
+#상태:empty { display: none; }
+#상태.오류 { color: #c62828; font-weight: bold; }
+
+.화면 { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
+.왼쪽, .오른쪽 { display: flex; flex-direction: column; align-items: center; }
+.왼쪽 { width: 100%; max-width: 280px; }
+.오른쪽 { width: 220px; }
+
+.안내 { margin: 0 0 6px; font-size: 1rem; }
+.도움말 { margin: 6px 0; font-size: 0.8rem; color: #666; text-align: center; }
+
+#그림판 {
+  width: 100%;
+  height: auto;
+  background: white;
+  box-shadow: 0 0 0 2px #888;
+  cursor: crosshair;
+  touch-action: none;  /* 그리는 동안 화면이 스크롤·확대되지 않게 함 */
+}
+#그림판.잠김 { opacity: 0.5; pointer-events: none; }
+
+.버튼줄 { display: flex; gap: 8px; width: 100%; margin-top: 10px; }
+.버튼줄 button {
+  flex: 1;
+  padding: 8px;
+  font: inherit;
+  border: 1px solid #888;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+}
+.버튼줄 button:hover { background: #eef3fb; }
+
+#결과 { font-size: 72px; font-weight: bold; line-height: 1.1; color: #1a5fb4; }
+#확신도 { min-height: 1.2em; margin: 0 0 8px; font-size: 0.9rem; }
+
+#막대들 { display: grid; gap: 4px; width: 100%; }
+.막대줄 { display: grid; grid-template-columns: 16px 1fr 40px; gap: 6px; align-items: center; font-size: 0.85rem; }
+.막대틀 { height: 14px; background: #e8ecf2; border-radius: 3px; overflow: hidden; }
+.막대 { display: block; width: 0; height: 100%; background: #99c1f1; }
+.막대줄.최대 .막대 { background: #1a5fb4; }
+.퍼센트 { text-align: right; }
+
+#미리보기 { width: 84px; height: 84px; background: black; image-rendering: pixelated; }
