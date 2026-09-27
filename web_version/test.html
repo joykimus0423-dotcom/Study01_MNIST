@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>웹 버전 검사</title>
+  <style>
+    body { font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; margin: 16px; }
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
+    .통과 { color: #1a7f37; }
+    .실패 { color: #c62828; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>웹 버전 검사</h1>
+  <p>자바스크립트 결과가 데스크톱(PyTorch)과 같은지 확인합니다. 검사 데이터는 <code>desktop_version/export_web.py</code>가 만듭니다.</p>
+  <p id="요약">검사 중…</p>
+  <table>
+    <thead><tr><th>검사</th><th>결과</th><th>내용</th></tr></thead>
+    <tbody id="결과표"></tbody>
+  </table>
+  <script type="module" src="js/test.js"></script>
+</body>
+</html>
