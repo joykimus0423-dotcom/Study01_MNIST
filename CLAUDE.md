@@ -25,6 +25,7 @@ MNIST로 학습한 CNN으로 손글씨 숫자를 인식하는 학습용 프로�
 
 - **모델을 다시 학습했거나 `model.py`를 바꿨을 때**: `desktop_version`에서 `python export_web.py` → `web_version/test.html`이 모두 통과하는지 확인 → `web_version/model/`을 함께 커밋합니다. 웹이 모르는 층을 추가했다면 `export_web.py`의 `층_목록_만들기()`와 `web_version/js/cnn.js`에 그 층을 더해야 합니다.
 - **`draw_app.py`의 `전처리()`나 정규화 상수를 바꿨을 때**: `web_version/js/preprocess.js`를 똑같이 고치고, `export_web.py`로 검사 데이터를 다시 만든 뒤 `test.html`로 확인합니다.
+- **`draw_app.py`의 `캔버스_크기`·`펜_굵기`를 바꿨을 때**: `web_version/js/app.js`의 같은 이름 상수도 반드시 똑같이 바꿉니다. 붓 굵기가 캔버스 크기에 비례해야 28×28로 줄인 뒤의 글씨 굵기가 데스크톱과 같아지기 때문입니다.
 
 ## 배포
 

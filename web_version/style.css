@@ -16,7 +16,7 @@ h1 small { display: block; font-size: 0.8rem; font-weight: normal; color: #666; 
 #상태:empty { display: none; }
 #상태.오류 { color: #c62828; font-weight: bold; }
 
-.화면 { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
+.화면 { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; user-select: none; }  /* 캔버스 밖으로 드래그해도 글자가 선택되지 않게 함 */
 .왼쪽, .오른쪽 { display: flex; flex-direction: column; align-items: center; }
 .왼쪽 { width: 100%; max-width: 280px; }
 .오른쪽 { width: 220px; }

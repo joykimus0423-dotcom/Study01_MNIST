@@ -16,7 +16,7 @@
 python -m http.server 8000     # 이 폴더에서 실행 → http://localhost:8000/ , 검사는 /test.html
 ```
 
-저장소 루트에서 띄우고 `http://localhost:8000/web_version/`으로 열면 GitHub Pages와 같은 하위 경로 상황을 확인할 수 있습니다(Claude는 `.claude/launch.json`의 `web` 서버를 씁니다).
+저장소 루트에서 띄우고 `http://localhost:8000/web_version/`으로 열면 GitHub Pages와 같은 하위 경로 상황을 확인할 수 있습니다(Claude는 `.claude/launch.json`의 `web` 서버를 씁니다. 이 파일은 로컬 전용이라 git에 올리지 않으며(.gitignore 처리), 저장소 루트에서 Python 3.13 인터프리터로 `-m http.server 8000`을 실행하는 `web` 설정 하나만 있으면 됩니다).
 
 - `test.html`: JS 결과를 데스크톱(PyTorch) 결과와 대조합니다. 파이썬 반올림, 빈 그림, 전처리(28×28 모든 픽셀 일치), 추론(확률 차이 1e-4 이하), 전체(예측 숫자 일치)를 검사하고, 요약에 `모두 통과 (N개)`가 나와야 합니다. 코드를 바꾸면 항상 이 페이지로 확인하세요.
 - Node.js가 설치되어 있지 않으므로 검사는 브라우저에서 돌립니다.

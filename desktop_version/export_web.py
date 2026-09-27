@@ -43,6 +43,14 @@ def 층_목록_만들기(모델):
         if isinstance(모듈, nn.Conv2d):
             if 모듈.stride != (1, 1) or 모듈.kernel_size[0] != 모듈.kernel_size[1]:
                 raise ValueError(f"웹 버전은 보폭 1, 정사각형 커널 합성곱만 지원합니다: {모듈}")
+            if 모듈.bias is None:
+                raise ValueError(f"웹 버전은 편향(bias)이 있는 합성곱만 지원합니다: {모듈}")
+            if 모듈.groups != 1:
+                raise ValueError(f"웹 버전은 groups=1인 합성곱만 지원합니다: {모듈}")
+            if 모듈.dilation != (1, 1):
+                raise ValueError(f"웹 버전은 dilation=1인 합성곱만 지원합니다: {모듈}")
+            if 모듈.padding[0] != 모듈.padding[1]:
+                raise ValueError(f"웹 버전은 가로세로 패딩이 같은 합성곱만 지원합니다: {모듈}")
             가중치 = 모듈.weight.detach().double()
             편향 = 모듈.bias.detach().double()
             다음 = 모듈들[i + 1] if i + 1 < len(모듈들) else None
@@ -58,8 +66,14 @@ def 층_목록_만들기(모델):
         elif isinstance(모듈, nn.ReLU):
             층들.append(({"종류": "ReLU"}, []))
         elif isinstance(모듈, nn.MaxPool2d):
+            if not isinstance(모듈.kernel_size, int):
+                raise ValueError(f"웹 버전은 정수 크기(정사각형)의 최대풀링만 지원합니다: {모듈}")
             if 모듈.stride != 모듈.kernel_size or 모듈.padding != 0:
                 raise ValueError(f"웹 버전은 보폭이 크기와 같은 최대풀링만 지원합니다: {모듈}")
+            if 모듈.dilation != 1:
+                raise ValueError(f"웹 버전은 dilation=1인 최대풀링만 지원합니다: {모듈}")
+            if 모듈.ceil_mode:
+                raise ValueError(f"웹 버전은 ceil_mode=False인 최대풀링만 지원합니다: {모듈}")
             층들.append(({"종류": "최대풀링", "크기": 모듈.kernel_size}, []))
         elif isinstance(모듈, nn.Flatten):
             층들.append(({"종류": "펼치기"}, []))

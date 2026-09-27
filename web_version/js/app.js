@@ -18,6 +18,8 @@ const 미리보기 = document.getElementById("미리보기").getContext("2d");
 const 그림 = { 데이터: new Uint8Array(캔버스_크기 * 캔버스_크기), 너비: 캔버스_크기, 높이: 캔버스_크기 };
 let 모델 = null;
 let 이전_좌표 = null;
+let 그리는_포인터_ID = null;    // 지금 그리고 있는 포인터의 id. 다른 손가락·펜의 입력은 무시해 줄이 섞이지 않게 합니다.
+let 마지막_포인터종류 = "mouse";  // contextmenu가 마우스 오른쪽 클릭인지 터치 길게 누르기인지 구분하는 데 씁니다.
 
 /** 포인터 위치를 280×280 그림판 좌표로 바꿉니다. 캔버스가 화면에서 작게 보여도 맞게 바꿉니다. */
 function 좌표(이벤트) {
@@ -110,26 +112,31 @@ function 지우기() {
   미리보기.clearRect(0, 0, 28, 28);
   그림.데이터.fill(0);
   이전_좌표 = null;
+  그리는_포인터_ID = null;
   결과_표시.textContent = "?";
   확신도_표시.textContent = "";
   막대그래프_그리기(null);
 }
 
-function 그리기_끝() {
-  if (이전_좌표 === null) return;
+function 그리기_끝(이벤트) {
+  if (이전_좌표 === null || 이벤트.pointerId !== 그리는_포인터_ID) return;
   이전_좌표 = null;
+  그리는_포인터_ID = null;
   인식();
 }
 
 function 이벤트_연결() {
   캔버스.addEventListener("pointerdown", (이벤트) => {
-    if (!모델 || 이벤트.button !== 0) return;
+    마지막_포인터종류 = 이벤트.pointerType;
+    // 이미 다른 포인터로 그리는 중이면(멀티터치) 새 포인터는 무시합니다. 두 손가락 선이 서로 이어지는 것을 막습니다.
+    if (!모델 || 이벤트.button !== 0 || 그리는_포인터_ID !== null) return;
+    그리는_포인터_ID = 이벤트.pointerId;
     캔버스.setPointerCapture(이벤트.pointerId);  // 캔버스 밖으로 나가도 계속 이벤트를 받음
     이전_좌표 = 좌표(이벤트);
     점_찍기(...이전_좌표);
   });
   캔버스.addEventListener("pointermove", (이벤트) => {
-    if (이전_좌표 === null) return;
+    if (이전_좌표 === null || 이벤트.pointerId !== 그리는_포인터_ID) return;
     const 지금_좌표 = 좌표(이벤트);
     선_긋기(...이전_좌표, ...지금_좌표);
     이전_좌표 = 지금_좌표;
@@ -138,7 +145,9 @@ function 이벤트_연결() {
   캔버스.addEventListener("pointercancel", 그리기_끝);
   캔버스.addEventListener("contextmenu", (이벤트) => {
     이벤트.preventDefault();
-    지우기();
+    // 안드로이드 Chrome은 손가락을 대고 잠시 멈추면(길게 누르기) contextmenu를 낸다.
+    // 마우스 오른쪽 클릭일 때만 지우고, 터치·펜의 길게 누르기는 그림을 그대로 둡니다.
+    if (마지막_포인터종류 === "mouse") 지우기();
   });
   document.getElementById("인식하기").addEventListener("click", 인식);
   document.getElementById("지우기").addEventListener("click", 지우기);
@@ -158,7 +167,11 @@ async function 시작() {
     상태_표시.textContent = "";
     캔버스.classList.remove("잠김");
   } catch (오류) {
-    상태_표시.textContent = `모델을 불러오지 못했습니다: ${오류.message}`;
+    // file://로 열면(예: Firefox는 모듈을 실행하지만 fetch가 막힘) 원인이 네트워크 오류로만 보이므로,
+    // index.html의 인라인 스크립트와 같은 안내 문구를 원인 대신 보여 줍니다.
+    상태_표시.textContent = location.protocol === "file:"
+      ? "파일을 직접 열면 동작하지 않습니다. web_version 폴더에서 'python -m http.server'를 실행한 뒤 http://localhost:8000 으로 접속하세요."
+      : `모델을 불러오지 못했습니다: ${오류.message}`;
     상태_표시.classList.add("오류");
   }
 }
