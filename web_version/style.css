@@ -9,6 +9,8 @@ body {
 
 main { max-width: 640px; margin: 0 auto; padding: 16px; }
 
+#작성자 { margin: 0 0 8px; font-size: 1rem; font-weight: bold; color: #1a5fb4; }
+
 h1 { font-size: 1.3rem; margin: 0 0 8px; }
 h1 small { display: block; font-size: 0.8rem; font-weight: normal; color: #666; }
 
